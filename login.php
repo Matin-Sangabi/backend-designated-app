@@ -7,12 +7,18 @@ if (!empty($postData)) {
     $email = $request->email;
     $password = $request->password;
     $sql = "SELECT *FROM users WHERE email = '$email'";
+
     $result = mysqli_query($connect, $sql);
     $row = mysqli_fetch_assoc($result);
-    if (sha1($password) == $row['password']) {
-        echo json_encode(["success" => true, "userList" => $row]);
+    if ($row) {
+        if (sha1($password) == $row['password']) {
+            echo json_encode(["success" => true, "userList" => $row]);
+        } else {
+            http_response_code(402);
+            die("ایمیل یا رمز عبور اشتباه است");
+        }
     } else {
         http_response_code(402);
-        die("ایمیل باا رمز عبور اشتباه است");
+        die("ایمیل یا رمز عبور اشتباه است");
     }
 }
