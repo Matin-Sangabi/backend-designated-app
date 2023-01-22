@@ -13,7 +13,7 @@ if ($id > 0) {
     if (mysqli_num_rows($res) > 0) {
         $response = unserialize($row['designated']);
         $viewjson['id'] = $row['id'];
-        $viewjson['designated'] = json_decode($response);
+        $viewjson['designated'] = $response;
         $array_json[] = $viewjson;
         echo json_encode($array_json);
         return;
@@ -27,7 +27,7 @@ if ($id > 0) {
         while ($row = mysqli_fetch_assoc($res)) {
             $response = unserialize($row['designated']);
             $viewjson['id'] = $row['id'];
-            $viewjson['designated'] = json_decode($response);
+            $viewjson['designated'] = $response;
             $array_json[] = $viewjson;
         }
         echo json_encode($array_json);
