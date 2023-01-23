@@ -14,7 +14,7 @@ if ($id > 0) {
         $response = unserialize($row['designated']);
         $viewjson['id'] = $row['id'];
         $viewjson['designated'] = $response;
-        $array_json[] = $viewjson;
+        $array_json = $viewjson;
         echo json_encode($array_json);
         return;
     } else {
