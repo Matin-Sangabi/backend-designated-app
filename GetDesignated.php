@@ -19,6 +19,7 @@ if ($id > 0) {
         return;
     } else {
         echo json_encode("کاربری با این مشخصات وجود ندارد");
+        return;
     }
 } else {
     $sql = "SELECT * FROM designated";
@@ -35,5 +36,6 @@ if ($id > 0) {
     } else {
         $json = [];
         echo json_encode($json);
+        return;
     }
 }
