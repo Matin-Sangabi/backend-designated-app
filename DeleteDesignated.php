@@ -3,7 +3,7 @@ require './connection.php';
 require './header.php';
 $url = $_SERVER['HTTP_HOST'] . $_SERVER['PHP_SELF'];
 $query = $_SERVER['QUERY_STRING'];
-$queryId = explode("=" , $query);
+$queryId = explode("=", $query);
 $uid = end($queryId);
 $array = explode("/", $url);
 $end = end($array);
@@ -14,21 +14,24 @@ if ($id > 0) {
     $res = mysqli_fetch_assoc($row);
     $des  = unserialize($res['designated']);
     $salesInvoicesId = $des->salesInvoices;
-    $sales[] = findObjectById($salesInvoicesId, $uid);
+    $sales = findObjectById($salesInvoicesId, $uid);
     if ($sales == false) {
         $salesInvoicesId = [];
     } else {
         $salesInvoicesId = $sales;
     }
     $des->salesInvoices = $salesInvoicesId;
+    $viewJson['id'] = (string)$id;
+    $viewJson['designated'] = $des;
+    $designatedApi = $viewJson;
     $designated = serialize($des);
     $sql = "UPDATE designated SET designated = '$designated' WHERE id = '$id'";
-    if(mysqli_query($connect , $sql)) {
-        echo json_encode(["success" => true , "message"  => "فاکتور پاک شد"]);
+    if (mysqli_query($connect, $sql)) {
+        echo json_encode($designatedApi);
         http_response_code(201);
         return;
-    }else{
-        echo json_encode(["success" => false , "message"  => "error message"]);
+    } else {
+        echo json_encode(["success" => false, "message"  => "error message"]);
         http_response_code(402);
         return;
     }
@@ -36,10 +39,11 @@ if ($id > 0) {
 
 function findObjectById($salesInvoicesId, $id)
 {
+    $name = [];
     foreach ($salesInvoicesId as $element) {
         if ($id !== $element->id) {
-            return $element;
+            $name[] =  $element;
         }
     }
-    return false;
+    return $name;
 }
