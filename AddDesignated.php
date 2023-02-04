@@ -5,7 +5,6 @@ $url = $_SERVER['HTTP_HOST'] . $_SERVER['PHP_SELF'];
 $array = explode("/", $url);
 $end = end($array);
 $POSTId = (int)$end;
-echo $POSTId;
 $postData = file_get_contents("php://input");
 if (!empty($postData)) {
     if ($POSTId > 0) {
@@ -28,11 +27,20 @@ if (!empty($postData)) {
         $designated = serialize($des);
         $sql = "INSERT INTO designated( id ,designated) VALUES ('$id' , '$designated')";
         if (mysqli_query($connect, $sql)) {
-            echo json_encode(["success" => true, "message" => "فاکتور فروش اضافه شد"]);
-            http_response_code(201);
+            $selectSql = "SELECT * FROM designated";
+            $res = mysqli_query($connect, $selectSql);
+            while ($row = mysqli_fetch_assoc($res)) {
+                $response = unserialize($row['designated']);
+                $viewjson['id'] = $row['id'];
+                $viewjson['designated'] = $response;
+                $array_json[] = $viewjson;
+            }
+            echo json_encode($array_json);
+            return;
         } else {
-            http_response_code(401);
-            die("ناموفق");
+            $json = [];
+            echo json_encode($json);
+            return;
         }
     }
 }
