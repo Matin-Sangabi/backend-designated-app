@@ -14,7 +14,17 @@ if (!empty($postData)) {
         $designated = serialize($des);
         $UpdateSql = "UPDATE designated SET designated = '$designated' WHERE id = '$POSTId'";
         if (mysqli_query($connect, $UpdateSql)) {
-            echo json_encode(["success" => true, "message" => "فاکتور فروش اضافه شد"]);
+            $selectSql = "SELECT * FROM designated WHERE id = '$POSTId'";
+            $res = mysqli_query($connect, $selectSql);
+            $row = mysqli_fetch_assoc($res);
+            if (mysqli_num_rows($res) > 0) {
+                $response = unserialize($row['designated']);
+                $viewjson['id'] = $row['id'];
+                $viewjson['designated'] = $response;
+                $array_json = $viewjson;
+                echo json_encode($array_json);
+                return;
+            }
             http_response_code(201);
         } else {
             http_response_code(401);
