@@ -6,11 +6,13 @@ if (!empty($postData)) {
     $request = json_decode($postData);
     $email = $request->email;
     $password = $request->password;
+    
     $sql = "SELECT *FROM users WHERE email = '$email'";
 
     $result = mysqli_query($connect, $sql);
     $row = mysqli_fetch_assoc($result);
     if ($row) {
+        
         if (sha1($password) == $row['password']) {
             echo json_encode(["success" => true, "userList" => $row]);
         } else {

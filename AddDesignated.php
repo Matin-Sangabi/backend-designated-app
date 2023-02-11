@@ -11,10 +11,12 @@ if (!empty($postData)) {
         $request = json_decode($postData);
         $id  = $request->id;
         $des = $request->designated;
+        $userName = $request->userName;
+        $dbUserName = "designated_" . $userName;
         $designated = serialize($des);
-        $UpdateSql = "UPDATE designated SET designated = '$designated' WHERE id = '$POSTId'";
+        $UpdateSql = "UPDATE $dbUserName SET designated  = '$designated' WHERE id = '$POSTId'";
         if (mysqli_query($connect, $UpdateSql)) {
-            $selectSql = "SELECT * FROM designated WHERE id = '$POSTId'";
+            $selectSql = "SELECT * FROM $dbUserName WHERE id = '$POSTId'";
             $res = mysqli_query($connect, $selectSql);
             $row = mysqli_fetch_assoc($res);
             if (mysqli_num_rows($res) > 0) {
@@ -34,10 +36,12 @@ if (!empty($postData)) {
         $request = json_decode($postData);
         $id  = $request->id;
         $des = $request->designated;
+        $userName = $request->userName;
+        $dbUserName = "designated_" . $userName;
         $designated = serialize($des);
-        $sql = "INSERT INTO designated( id ,designated) VALUES ('$id' , '$designated')";
+        $sql = "INSERT INTO $dbUserName( id ,designated) VALUES ('$id' , '$designated')";
         if (mysqli_query($connect, $sql)) {
-            $selectSql = "SELECT * FROM designated";
+            $selectSql = "SELECT * FROM $dbUserName";
             $res = mysqli_query($connect, $selectSql);
             while ($row = mysqli_fetch_assoc($res)) {
                 $response = unserialize($row['designated']);
